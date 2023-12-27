@@ -10,29 +10,25 @@ use App\Services\Page;
     <h1 class="text">Бизнес</h1>
 
     <?php Page::part("menu_buiss"); ?>
+		<form action="">
+			<div class="bg-card">
+			<div class="text"><h4>Шаг 1</h4></div>
+			<p class="ribbon-desc">Заполните данные о вашем бизнесе</p>
+			<div class="ribbon-desc1">Это нужно для создания карточки вашего бизнеса</div>
+			<button class="imgage">Добавить фото</button>
+			<div class="ribbon-title">Title</div>
+			<div class="ribbon-sdesc">Краткое описание для карточки<br><textarea name="" id="" cols="50" rows="1"></textarea></div>
+			<div class="ribbon-email">Почта для связи<br><input type="email"></div>
+			<div class="ribbon-email">Цена бизнеса: <br><input type="text"></div>
+			<div class="ribbon-email">БИН: <br><input type="text"></div>
+			<div class="ribbon-desc">Подробная инфорамция о бизнесе<textarea name="" id="" cols="165" rows="5"></textarea></div>
 
-    <div class="title-card-buiss">
-        <div class="title">
-            <p>шаг 1</p>
-        </div>
+			<div class="button-holder">		
+			<button class="invest" href="/add_business_two">Далее</button>
+			</div>
+			</div>
+		</form>
 
-        <p class="task">заполните данные о вашем бизнесе</p>
-        <p class="explanation">это нужно для создания карточки вашего бизнеса</p>
-    </div>
-
-    <div class="card-add-buiss">
-        <form action="">
-            <button class="images-buiss">
-                Add images business
-            </button>
-
-            <p>Название бизнеса: <input type="text" name="buiss_name"></p>
-            <p>Краткое описание (что за бизнес): <input type="text" name="description"></p>
-
-            <p>Подробная информация о бизнесе, всё что нужно знать пользователю</p>
-            <input type="text" name="all_inf">
-        </form>
-    </div>
 
 
 
