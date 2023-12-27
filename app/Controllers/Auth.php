@@ -80,7 +80,7 @@ class Auth
                 "email" => $user['email'],
                 "number" => $user['number'],
                 "iin" => $user['iin'],
-                "avatar" => "",
+                "avatars" => "",
                 "user_gr" => $user['group_user'], /* Значение от 1 до 5, Пользователь, Инвалид, Юр. Лицо, , Админ */
                 "bin" => $user['bin'],
                 "ip_to" => $user['ip_to'],
@@ -91,6 +91,8 @@ class Auth
             ];
 
 
+
+
             $_SESSION['message-g'] = 'Вы успешно Вошли';
             header('Location: /');
             exit();
@@ -99,6 +101,27 @@ class Auth
             self::exLog();
         }
 
+    }
+
+    public static function is_busines()
+    {
+        $bm_id = $_SESSION['user']['id'];
+
+        $check_buiss = mysqli_query(App::$connect_db,
+                "SELECT * FROM `business` WHERE `bm_id` = '$bm_id'");
+            if (mysqli_num_rows($check_buiss) > 0) {
+                $buiss = mysqli_fetch_assoc($check_buiss);
+                $_SESSION['business'] = [
+                    "id" => $buiss['id'],
+                    "bm_id" => $buiss['bm_id'],
+                    "buiss_img" => $buiss['buiss_img'],
+                    "buiss_name" => $buiss['buiss_name'],
+                    "description" => $buiss['description'],
+                    "all_inf" => $buiss['all_inf'],
+                    "bin" => $buiss['bin'],
+                    "price" => $buiss['price']
+                ];
+            }
     }
 
 
@@ -136,14 +159,46 @@ class Auth
 
         if (mysqli_num_rows($check_avatar) > 0){
             foreach ($avatars_path_forIMG as $avatar_path_forIMG){
-                $_SESSION['user']['avatar'] = $avatar_path_forIMG;
+                $_SESSION['user']['avatars'] = $avatar_path_forIMG;
             }
             header('Location: /profile');
             exit();
         } else{
-            echo "ERROR: avatar not found";
+            echo "ERROR: avatars not found";
         }
 
+    }
+
+    public function img_buiss($data, $files)
+    {
+        $id = $_SESSION['business']['bm_id'];
+
+        echo 'This page then add profile photo';
+        $img_buiss = $files["img_buiss"];
+
+        $fileName = time() . '_' . $img_buiss["name"];
+        $path = "img_buiss/avatars/" . $fileName;
+        $sql_path_avatar = $path;
+
+        if (move_uploaded_file($img_buiss["tmp_name"], $path)){
+            mysqli_query(App::$connect_db, "UPDATE `business` SET `img_buiss` =
+                '$sql_path_avatar' WHERE `business`.`bm_id` = '$id'");
+        } else{
+            Router::error(500);
+        }
+        $check_avatar = mysqli_query(App::$connect_db, "SELECT * FROM `business` WHERE `img_buiss` = '$sql_path_avatar'");
+        $avatars_path_forIMG = mysqli_query(App::$connect_db, "SELECT `img_buiss` FROM `business`");
+        $avatars_path_forIMG = mysqli_fetch_all($avatars_path_forIMG);
+
+        if (mysqli_num_rows($check_avatar) > 0){
+            foreach ($avatars_path_forIMG as $avatar_path_forIMG){
+                $_SESSION['user']['avatars'] = $avatar_path_forIMG;
+            }
+            header('Location: /business');
+            exit();
+        } else{
+            echo "ERROR: avatars not found";
+        }
     }
 
     public static function is_avatar()
@@ -155,8 +210,8 @@ class Auth
 
         $check_avatar = mysqli_fetch_row($check_avatar);
 
-//        print_r($_SESSION['user']['avatar']);
-//        echo $_SESSION['user']['avatar']['0'];
+//        print_r($_SESSION['user']['avatars']);
+//        echo $_SESSION['user']['avatars']['0'];
 //        print_r($check_avatar);
         echo $check_avatar['0'];
 
